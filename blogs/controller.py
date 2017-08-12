@@ -2,9 +2,14 @@ from .model import Schema, create_new, get_list
 
 
 def create(data):
-	data = Schema().validate(data)
-	create_new(data)
+	schema = Schema()
+	data = schema.validate(data)
+
+	data.update(schema.get_defaults())
+	return create_new(data)
 
 
-def get(count):
-	return get_list(count)
+def get(data):
+	page = int(data.get('page', 0))
+	count = int(data.get('count', 10))
+	return get_list(page, count)

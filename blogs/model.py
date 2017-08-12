@@ -11,10 +11,10 @@ import time
 
 
 class Schema(ObjectSchema):
-	text = String(min_len=1)
+	title = String(min_len=1)
 	thumbnail = String(min_len=1)
 	body = String(min_len=1)
-	user = String(min_len=1)
+	#author = String(min_len=1)
 	
 	def get_defaults(self):
 		return {
@@ -26,12 +26,25 @@ class Schema(ObjectSchema):
 
 def create_new(data):
 	mongo_db = utils.get_db_handler(DB_NAME, BLOGS_COLLECTION)
-	mongo_db.insert(data)
+
+	try:
+		mongo_db.insert_one(data)
+		status = True
+	except:
+		status = False
+	
+	return status
 	
 
-def get_list(count=10):
+def get_list(page=0, count=10):
 	mongo_db = utils.get_db_handler(DB_NAME, BLOGS_COLLECTION)
-	cursor = db.find().limit(count)
 
+	cursor = mongo_db.find({}, {'_id': 0}).skip(page).limit(count)
+
+	blogs = []
+	for each in cursor:
+		blogs.append(each)
+
+	return blogs
 
 
