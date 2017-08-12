@@ -1,10 +1,10 @@
+from .model import Schema, create_new, get_list
 
 
+def create(data):
+	data = Schema().validate(data)
+	create_new(data)
 
-class Blog(object):
 
-	def create(self):
-		pass
-
-	def get(self):
-		pass
+def get(count):
+	return get_list(count)
